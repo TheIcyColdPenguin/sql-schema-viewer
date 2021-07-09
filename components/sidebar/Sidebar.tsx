@@ -7,13 +7,16 @@ import { EditingTableContext } from '../contexts/editingTableContext';
 import EditableGroup from './EditableContainer';
 import { OrdinaryEditable } from './Editable';
 import { SQLTable } from '../../others/constants';
-import { makeColumn } from '../../others/helpers';
+import { makeColumn , newTableSetterFactory} from '../../others/helpers';
 
 const Sidebar: FC = () => {
     const [allTables, setAllTables] = useContext(AllTablesContext);
     const [editingTable, setEditingTable] = useContext(EditingTableContext);
 
     const tableIndex = allTables.findIndex(eachTable => eachTable.id == editingTable?.id);
+
+    const setNewTable = newTableSetterFactory(setEditingTable, setAllTables, tableIndex);
+
     const onColumnDelete = (i: number) => {
         if (!editingTable) return;
 
@@ -21,8 +24,7 @@ const Sidebar: FC = () => {
 
         newTable.columns.splice(i, 1);
 
-        setEditingTable(newTable);
-        setAllTables([...allTables.slice(0, tableIndex), ...allTables.slice(tableIndex + 1), newTable]);
+        setNewTable(newTable);
     };
 
     return (
@@ -40,13 +42,7 @@ const Sidebar: FC = () => {
                                     value: editingTable.name,
                                     onInput: e => {
                                         const newTable: SQLTable = { ...editingTable, name: e.target.value };
-
-                                        setEditingTable(newTable);
-                                        setAllTables([
-                                            ...allTables.slice(0, tableIndex),
-                                            ...allTables.slice(tableIndex + 1),
-                                            newTable,
-                                        ]);
+                                        setNewTable(newTable);
                                     },
                                 },
                             ]}
@@ -58,12 +54,7 @@ const Sidebar: FC = () => {
                             const newTable: SQLTable = { ...editingTable };
                             newTable.columns.push(makeColumn('new_column', 'INT', ''));
 
-                            setEditingTable(newTable);
-                            setAllTables([
-                                ...allTables.slice(0, tableIndex),
-                                ...allTables.slice(tableIndex + 1),
-                                newTable,
-                            ]);
+                            setNewTable(newTable);
                         }}
                     >
                         {editingTable.columns.map((eachColumn, i) => {
@@ -80,12 +71,7 @@ const Sidebar: FC = () => {
                                                 const newTable: SQLTable = { ...editingTable };
                                                 newTable.columns[i].name = e.target.value;
 
-                                                setEditingTable(newTable);
-                                                setAllTables([
-                                                    ...allTables.slice(0, tableIndex),
-                                                    ...allTables.slice(tableIndex + 1),
-                                                    newTable,
-                                                ]);
+                                                setNewTable(newTable);
                                             },
                                         },
                                         {
@@ -97,12 +83,7 @@ const Sidebar: FC = () => {
                                                 // @ts-ignore
                                                 newTable.columns[i].type = e.target.value;
 
-                                                setEditingTable(newTable);
-                                                setAllTables([
-                                                    ...allTables.slice(0, tableIndex),
-                                                    ...allTables.slice(tableIndex + 1),
-                                                    newTable,
-                                                ]);
+                                                setNewTable(newTable);
                                             },
                                         },
                                         {
@@ -114,12 +95,7 @@ const Sidebar: FC = () => {
                                                 // @ts-ignore
                                                 newTable.columns[i].modifier = e.target.value.toUpperCase();
 
-                                                setEditingTable(newTable);
-                                                setAllTables([
-                                                    ...allTables.slice(0, tableIndex),
-                                                    ...allTables.slice(tableIndex + 1),
-                                                    newTable,
-                                                ]);
+                                                setNewTable(newTable);
                                             },
                                         },
                                     ]}
