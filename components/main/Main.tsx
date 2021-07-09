@@ -2,7 +2,7 @@ import { FC, useContext, MouseEvent, useState } from 'react';
 
 import { AllTablesContext } from '../contexts/allTablesContext';
 import { SelectedTableContext } from '../contexts/selectedTableContext';
-import { makeColumn, makeTable } from '../../others/helpers';
+import { makeColumn, makeTable, newTableSetterFactory } from '../../others/helpers';
 
 import Table from '../table/Table';
 
@@ -14,6 +14,10 @@ const Main: FC = props => {
 
     const [prevMouseX, setPrevMouseX] = useState(1);
     const [prevMouseY, setPrevMouseY] = useState(1);
+
+    const selectedIndex = allTables.findIndex(eachTable => eachTable.id === selectedTable?.id);
+
+    const setNewTable = newTableSetterFactory(setSelectedTable, setAllTables, selectedIndex);
 
     const onClick = (e: MouseEvent<HTMLDivElement>) => {
         if (!e.shiftKey) return;
@@ -29,9 +33,7 @@ const Main: FC = props => {
             const prevTablePos = { ...selectedTable.pos };
             // make sure values aren't 0
             if (prevTablePos.x && prevTablePos.y) {
-                const elementToChangeIndex = allTables.findIndex(singleTable => singleTable.id === selectedTable.id);
-
-                const updatedTable = {
+                const newTable = {
                     ...selectedTable,
                     pos: {
                         x: prevTablePos.x + (e.pageX - prevMouseX),
@@ -39,13 +41,7 @@ const Main: FC = props => {
                     },
                 };
 
-                setAllTables([
-                    ...allTables.slice(0, elementToChangeIndex),
-                    ...allTables.slice(elementToChangeIndex + 1),
-                    updatedTable,
-                ]);
-
-                setSelectedTable(updatedTable);
+                setNewTable(newTable);
             }
         }
 
