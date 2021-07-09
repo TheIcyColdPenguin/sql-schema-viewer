@@ -1,0 +1,84 @@
+.sidebar {
+    background-color: hsl(240, 11%, 15%);
+
+    color: white;
+    font-family: sans-serif;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar .heading {
+    font-size: xx-large;
+    margin: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar .container {
+    color: #ddd;
+    user-select: none;
+}
+
+.sidebar .container > div:first-child {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 10%;
+}
+
+.sidebar .container > div:first-child > span {
+    margin: 0.25rem 0.5rem;
+}
+
+.sidebar .container > div:first-child > span:last-child {
+    margin-right: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* first-child styling should come after last-child */
+.sidebar .container > div:first-child > span:first-child {
+    margin-right: auto;
+}
+
+.sidebar .title {
+    font-size: large;
+    background-color: #b392f099;
+    margin: 1rem 0.5rem;
+    padding: 0.3rem 1rem;
+    border-radius: 5px;
+}
+
+.sidebar .editablecontainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    margin: 1.5rem 1rem;
+}
+
+.sidebar .editablecontainer > div {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 5% 1fr;
+}
+
+.sidebar .editablecontainer > span {
+    font-size: medium;
+    font-weight: 400;
+}
+.sidebar .editablecontainer > select,
+.sidebar .editablecontainer > input {
+    margin: 0.5rem 1rem;
+    color: white;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    border-bottom: 2px solid #b392f050;
+    transition: all 0.1s ease;
+    width: 80%;
+}
+
+.sidebar .editablecontainer > input:hover {
+    border-bottom: 2px solid #b392f070;
+}
+.sidebar .editablecontainer > input:focus {
+    border-bottom: 2px solid #b392f0aa;
+}

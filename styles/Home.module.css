@@ -1,6 +1,9 @@
 .container {
     min-height: 100vh;
     height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
 
+    display: grid;
     grid-template-columns: 1fr minmax(250px, 45vh);
 }

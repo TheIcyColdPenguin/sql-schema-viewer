@@ -1,7 +1,17 @@
 import Head from 'next/head';
+
 import styles from '../styles/Home.module.css';
 
-export default function Home() {
+import Main from '../components/main/Main';
+import Sidebar from '../components/sidebar/Sidebar';
+
+import { SelectedTableProvider } from '../components/contexts/selectedTableContext';
+import { AllTablesProvider } from '../components/contexts/allTablesContext';
+import { EditingTableProvider } from '../components/contexts/editingTableContext';
+
+import { FC } from 'react';
+
+const Home: FC = () => {
     return (
         <div className={styles.container}>
             <Head>
@@ -9,6 +19,16 @@ export default function Home() {
                 <meta name="description" content="An SQL Data Modeller that makes your life easier" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <SelectedTableProvider>
+                <AllTablesProvider>
+                    <EditingTableProvider>
+                        <Main />
+                        <Sidebar />
+                    </EditingTableProvider>
+                </AllTablesProvider>
+            </SelectedTableProvider>
         </div>
     );
-}
+};
+
+export default Home;
