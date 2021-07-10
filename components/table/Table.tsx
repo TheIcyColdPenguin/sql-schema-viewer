@@ -28,6 +28,7 @@ const Table: FC<{ table: SQLTable }> = ({ table }) => {
                 if (e.shiftKey) {
                     setAllTables(prevAllTables => prevAllTables.filter(eachOldTable => eachOldTable.id !== table.id));
                     setSelectedTable(null);
+                    setEditingTable(null);
                 }
             }}
             onDoubleClick={e => {
