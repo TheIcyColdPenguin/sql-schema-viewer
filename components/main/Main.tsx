@@ -31,18 +31,16 @@ const Main: FC = props => {
     const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
         if (selectedTable) {
             const prevTablePos = { ...selectedTable.pos };
-            // make sure values aren't 0
-            if (prevTablePos.x && prevTablePos.y) {
-                const newTable = {
-                    ...selectedTable,
-                    pos: {
-                        x: prevTablePos.x + (e.pageX - prevMouseX),
-                        y: prevTablePos.y + (e.pageY - prevMouseY),
-                    },
-                };
 
-                setNewTable(newTable);
-            }
+            const newTable = {
+                ...selectedTable,
+                pos: {
+                    x: prevTablePos.x + (e.pageX - prevMouseX),
+                    y: prevTablePos.y + (e.pageY - prevMouseY),
+                },
+            };
+
+            setNewTable(newTable);
         }
 
         setPrevMouseX(e.pageX);
