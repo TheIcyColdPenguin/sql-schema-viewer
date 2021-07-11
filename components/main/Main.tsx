@@ -2,6 +2,8 @@ import { FC, useContext, MouseEvent, useState } from 'react';
 
 import { AllTablesContext } from '../contexts/allTablesContext';
 import { SelectedTableContext } from '../contexts/selectedTableContext';
+import { EditingTableContext } from '../contexts/editingTableContext';
+
 import { makeColumn, makeTable, newTableSetterFactory } from '../../others/helpers';
 
 import Table from '../table/Table';
@@ -11,6 +13,7 @@ import styles from '../../styles/main.module.css';
 const Main: FC = props => {
     const [allTables, setAllTables] = useContext(AllTablesContext);
     const [selectedTable, setSelectedTable] = useContext(SelectedTableContext);
+    const [editingTable, setEditingTable] = useContext(EditingTableContext);
 
     const [prevMouseX, setPrevMouseX] = useState(1);
     const [prevMouseY, setPrevMouseY] = useState(1);
@@ -41,6 +44,9 @@ const Main: FC = props => {
             };
 
             setNewTable(newTable);
+            if (newTable.id === editingTable?.id) {
+                setEditingTable(newTable);
+            }
         }
 
         setPrevMouseX(e.pageX);
