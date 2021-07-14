@@ -1,7 +1,6 @@
 import { createContext, FC, useState, Dispatch, SetStateAction } from 'react';
-import { SQLTable } from '../../others/constants';
 
-type maybeTable = SQLTable | null;
+type maybeTable = number | null;
 type editingTableType = [maybeTable, Dispatch<SetStateAction<maybeTable>>];
 export const EditingTableContext = createContext<editingTableType>({} as editingTableType);
 

@@ -1,9 +1,9 @@
-import { SQLColumn, SQLKeyModifier, SQLTable, SQLType } from './constants';
-
 import { Dispatch, SetStateAction } from 'react';
 
+import { SQLColumn, SQLKeyModifier, SQLTable, SQLType } from './constants';
+
 export const makeColumn = (name: string, type?: SQLType, flag?: SQLKeyModifier): SQLColumn => {
-    return { name, type: type || 'INT', modifier: flag || '' };
+    return { name, type: type || 'INT', modifier: flag || '', reference: null };
 };
 
 export const makeTable = (() => {
@@ -14,15 +14,26 @@ export const makeTable = (() => {
     };
 })();
 
-export const newTableSetterFactory = (
-    setCurrentTable: Dispatch<SetStateAction<SQLTable | null>>,
-    setAllTables: (value: SetStateAction<SQLTable[]>) => void,
-    index: number
-) => {
-    return (newTable: SQLTable) => {
-        if (index === -1) return;
+export const setNewTable = (setAllTables: Dispatch<SetStateAction<SQLTable[]>>, newTable: SQLTable) => {
+    setAllTables(prevAllTables => {
+        const index = prevAllTables.findIndex(eachTable => eachTable.id === newTable.id);
 
-        setCurrentTable(newTable);
-        setAllTables(prevAllTables => [...prevAllTables.slice(0, index), ...prevAllTables.slice(index + 1), newTable]);
-    };
+        if (index === -1) {
+            return [...prevAllTables, newTable];
+        }
+
+        return [...prevAllTables.slice(0, index), newTable, ...prevAllTables.slice(index + 1)];
+    });
+};
+
+export const findIndex = (allTables: SQLTable[], table: SQLTable) => {
+    const index = allTables.findIndex(eachTable => eachTable.id === table.id);
+    if (index === -1) {
+        return null;
+    }
+    return index;
+};
+
+export const convertRemToPixels = (rem: number) => {
+    return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 };

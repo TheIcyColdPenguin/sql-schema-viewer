@@ -1,27 +1,39 @@
-import { FC, useContext } from 'react';
-import { SQLTable } from '../../others/constants';
+import { CSSProperties, FC, useContext } from 'react';
 
-import styles from '../../styles/table.module.css';
 import { AllTablesContext } from '../contexts/allTablesContext';
 import { SelectedTableContext } from '../contexts/selectedTableContext';
 import { EditingTableContext } from '../contexts/editingTableContext';
 
-const Table: FC<{ table: SQLTable }> = ({ table }) => {
+import { SQLTable } from '../../others/constants';
+import { findIndex } from '../../others/helpers';
+
+import styles from '../../styles/table.module.css';
+
+const Table: FC<{ table: SQLTable; index: number }> = ({ table, index }) => {
     const [selectedTable, setSelectedTable] = useContext(SelectedTableContext);
     const [, setEditingTable] = useContext(EditingTableContext);
-    const [, setAllTables] = useContext(AllTablesContext);
+    const [allTables, setAllTables] = useContext(AllTablesContext);
+
+    const style: CSSProperties = { left: table.pos.x, top: table.pos.y };
+
+    if (selectedTable !== null && allTables[selectedTable]?.id === table.id) {
+        style.transform = 'scale(1.05)';
+        style.filter = 'brightness(1.05)';
+    }
 
     return (
         <div
-            style={{ left: table.pos.x, top: table.pos.y }}
+            style={style}
             className={styles.table}
             onClick={e => e.stopPropagation()}
             onMouseDown={e => {
                 e.stopPropagation();
-                setSelectedTable(table);
+                setSelectedTable(index);
             }}
             onMouseUp={() => {
-                if (selectedTable?.id === table.id) setSelectedTable(null);
+                if (selectedTable !== null) {
+                    if (allTables[selectedTable]?.id === table.id) setSelectedTable(null);
+                }
             }}
             onContextMenu={e => {
                 e.preventDefault();
@@ -33,7 +45,7 @@ const Table: FC<{ table: SQLTable }> = ({ table }) => {
             }}
             onDoubleClick={e => {
                 e.stopPropagation();
-                setEditingTable(table);
+                setEditingTable(findIndex(allTables, table));
             }}
         >
             <div className={styles.title}>{table.name}</div>

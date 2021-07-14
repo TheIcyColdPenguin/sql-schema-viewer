@@ -7,7 +7,7 @@ interface EditableGroupProps {
     addNew?: MouseEventHandler<HTMLSpanElement>;
 }
 
-const EditableGroup: FC<EditableGroupProps> = ({ title, children, addNew }) => {
+export const EditableGroup: FC<EditableGroupProps> = ({ title, children, addNew }) => {
     return (
         <div className={styles.container}>
             <div>

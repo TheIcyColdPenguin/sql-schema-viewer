@@ -32,12 +32,11 @@ export const OrdinaryEditable: FC<OrdinaryEditableProps> = ({ subtitle, inputs, 
                 ) : (
                     <select
                         key={i}
+                        value={eachInput.value}
                         placeholder={eachInput.placeholder || 'Choose a values'}
                         onInput={eachInput.onInput as (e: ChangeEvent<HTMLSelectElement>) => void}
                     >
-                        {eachInput.selectOptions?.map(eachOtion => (
-                            <option selected={eachOtion == eachInput.value}>{eachOtion}</option>
-                        )) || []}
+                        {eachInput.selectOptions?.map((eachOtion, j) => <option key={j}>{eachOtion}</option>) || []}
                     </select>
                 );
             })}

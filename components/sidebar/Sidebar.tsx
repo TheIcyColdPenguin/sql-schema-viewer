@@ -1,110 +1,92 @@
-import { FC, useContext } from 'react';
+import { ChangeEvent, FC, useContext } from 'react';
 
-import styles from '../../styles/sidebar.module.css';
 import { AllTablesContext } from '../contexts/allTablesContext';
 import { EditingTableContext } from '../contexts/editingTableContext';
 
-import EditableGroup from './EditableContainer';
+import { EditableGroup } from './EditableContainer';
 import { OrdinaryEditable } from './Editable';
+import { ColumnEdit } from './ColumnEdit';
+
 import { SQLTable } from '../../others/constants';
-import { makeColumn , newTableSetterFactory} from '../../others/helpers';
+import { setNewTable } from '../../others/helpers';
+
+import styles from '../../styles/sidebar.module.css';
+
+type onInputType<T = HTMLInputElement> = ChangeEvent<T>;
 
 const Sidebar: FC = () => {
     const [allTables, setAllTables] = useContext(AllTablesContext);
-    const [editingTable, setEditingTable] = useContext(EditingTableContext);
-
-    const tableIndex = allTables.findIndex(eachTable => eachTable.id == editingTable?.id);
-
-    const setNewTable = newTableSetterFactory(setEditingTable, setAllTables, tableIndex);
+    const [editingTable] = useContext(EditingTableContext);
 
     const onColumnDelete = (i: number) => {
-        if (!editingTable) return;
+        if (editingTable === null) return;
 
-        const newTable: SQLTable = { ...editingTable };
-
+        const newTable: SQLTable = { ...allTables[editingTable] };
         newTable.columns.splice(i, 1);
 
-        setNewTable(newTable);
+        setNewTable(setAllTables, newTable);
     };
+
+    if (editingTable === null) {
+        return (
+            <div className={styles.sidebar}>
+                <div className={styles.heading}>SQL Database Schema Modeller</div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.sidebar}>
             <div className={styles.heading}>SQL Database Schema Modeller</div>
-
-            {editingTable && (
-                <div>
-                    <EditableGroup title="Edit Table">
-                        <OrdinaryEditable
-                            subtitle="Name"
-                            inputs={[
-                                {
-                                    placeholder: 'Enter a table name',
-                                    value: editingTable.name,
-                                    onInput: e => {
-                                        const newTable: SQLTable = { ...editingTable, name: e.target.value };
-                                        setNewTable(newTable);
-                                    },
+            <div>
+                <EditableGroup title="Edit Table">
+                    <OrdinaryEditable
+                        subtitle="Name"
+                        inputs={[
+                            {
+                                placeholder: 'Enter a table name',
+                                value: allTables[editingTable].name,
+                                inputType: 'text',
+                                onInput: (e: onInputType) => {
+                                    const newTable: SQLTable = { ...allTables[editingTable], name: e.target.value };
+                                    setNewTable(setAllTables, newTable);
                                 },
-                            ]}
-                        />
-                    </EditableGroup>
-                    <EditableGroup
-                        title="Edit Columns"
-                        addNew={() => {
-                            const newTable: SQLTable = { ...editingTable };
-                            newTable.columns.push(makeColumn('new_column', 'INT', ''));
+                            },
+                        ]}
+                    />
+                </EditableGroup>
+                <ColumnEdit onColumnDelete={onColumnDelete} />
 
-                            setNewTable(newTable);
-                        }}
-                    >
-                        {editingTable.columns.map((eachColumn, i) => {
+                <EditableGroup title="Edit Relations">
+                    {allTables[editingTable].columns
+                        .filter(column => column.modifier === 'FOREIGN')
+                        .map((column, i) => {
                             return (
                                 <OrdinaryEditable
-                                    onDelete={() => onColumnDelete(i)}
                                     key={i}
-                                    subtitle={'Column ' + (i + 1)}
+                                    subtitle={column.name}
                                     inputs={[
                                         {
-                                            placeholder: 'Enter a column name',
-                                            value: editingTable.columns[i].name,
-                                            onInput: e => {
-                                                const newTable: SQLTable = { ...editingTable };
-                                                newTable.columns[i].name = e.target.value;
+                                            placeholder: 'Enter table referred to',
+                                            value: allTables[column.reference!]?.name || allTables[0]?.name || '',
+                                            inputType: 'select',
+                                            selectOptions: allTables.map(table => table.name),
+                                            onInput: (e: onInputType<HTMLSelectElement>) => {
+                                                const newTable = { ...allTables[editingTable] };
 
-                                                setNewTable(newTable);
-                                            },
-                                        },
-                                        {
-                                            placeholder: 'Enter a column type',
-                                            value: editingTable.columns[i].type,
-                                            onInput: e => {
-                                                const newTable: SQLTable = { ...editingTable };
-                                                // HACK
-                                                // @ts-ignore
-                                                newTable.columns[i].type = e.target.value;
+                                                newTable.columns[i].reference = allTables.findIndex(
+                                                    table => table.name === e.target.value
+                                                );
 
-                                                setNewTable(newTable);
-                                            },
-                                        },
-                                        {
-                                            placeholder: 'Enter an optional column modifier',
-                                            value: editingTable.columns[i].modifier,
-                                            onInput: e => {
-                                                const newTable: SQLTable = { ...editingTable };
-                                                // HACK
-                                                // @ts-ignore
-                                                newTable.columns[i].modifier = e.target.value.toUpperCase();
-
-                                                setNewTable(newTable);
+                                                setNewTable(setAllTables, newTable);
                                             },
                                         },
                                     ]}
                                 />
                             );
                         })}
-                    </EditableGroup>
-                </div>
-            )}
+                </EditableGroup>
+            </div>
         </div>
     );
 };
