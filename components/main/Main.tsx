@@ -8,6 +8,7 @@ import { convertRemToPixels, makeColumn, makeTable, setNewTable } from '../../ot
 import Table from '../table/Table';
 
 import styles from '../../styles/main.module.css';
+import { HelpButton } from './Help';
 
 const Main: FC = () => {
     const [allTables, setAllTables] = useContext(AllTablesContext);
@@ -108,6 +109,7 @@ const Main: FC = () => {
             {allTables.map((eachTable, i) => {
                 return <Table key={i} table={eachTable} index={i} />;
             })}
+            <HelpButton />
         </div>
     );
 };
