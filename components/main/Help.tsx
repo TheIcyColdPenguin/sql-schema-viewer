@@ -11,7 +11,7 @@ export const HelpButton: FC = () => {
             onMouseOut={() => setHelpDisplay(false)}
             className={styles.container}
         >
-            <img src={'/help.svg'} />
+            <img src={'help.svg'} />
             {helpDisplay && <div className={styles.popup}>
                 <ul>
                     <li>New Table - Shift + Click</li>
