@@ -25,7 +25,6 @@ const Main: FC = () => {
     const canvasContext = canvasRef.current?.getContext('2d');
 
     useEffect(() => {
-        console.log(allTables);
         const updateCanvasSize = () => {
             setCanvasWidth(mainRef.current?.clientWidth || 0);
             setCanvasHeight(mainRef.current?.clientHeight || 0);
