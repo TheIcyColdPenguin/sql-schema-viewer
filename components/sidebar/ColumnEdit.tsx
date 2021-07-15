@@ -75,9 +75,6 @@ export const ColumnEdit: FC<ColumnEditProps> = ({ onColumnDelete }) => {
                                         const enteredText = e.target.value.toUpperCase() as SQLKeyModifier;
 
                                         newTable.columns[i].modifier = enteredText;
-                                        if (enteredText !== 'FOREIGN') {
-                                            newTable.columns[i].reference = null;
-                                        }
 
                                         setNewTable(setAllTables, newTable);
                                     },

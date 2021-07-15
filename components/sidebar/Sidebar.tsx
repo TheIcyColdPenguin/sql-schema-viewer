@@ -59,8 +59,8 @@ const Sidebar: FC = () => {
 
                 <EditableGroup title="Edit Relations">
                     {allTables[editingTable].columns
-                        .filter(column => column.modifier === 'FOREIGN')
                         .map((column, i) => {
+                            if (column.modifier !== 'FOREIGN') return null;
                             return (
                                 <OrdinaryEditable
                                     key={i}
@@ -73,7 +73,6 @@ const Sidebar: FC = () => {
                                             selectOptions: allTables.map(table => table.name),
                                             onInput: (e: onInputType<HTMLSelectElement>) => {
                                                 const newTable = { ...allTables[editingTable] };
-
                                                 newTable.columns[i].reference = allTables.findIndex(
                                                     table => table.name === e.target.value
                                                 );
@@ -84,7 +83,8 @@ const Sidebar: FC = () => {
                                     ]}
                                 />
                             );
-                        })}
+                        })
+                        .filter(editables => editables)}
                 </EditableGroup>
             </div>
         </div>

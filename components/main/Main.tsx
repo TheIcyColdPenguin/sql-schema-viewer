@@ -60,7 +60,7 @@ const Main: FC = () => {
 
         allTables.forEach(eachTable => {
             eachTable.columns.forEach((eachColumn, i) => {
-                if (eachColumn.reference !== null) {
+                if (eachColumn.modifier === 'FOREIGN' && eachColumn.reference !== null) {
                     const referredTablePos = allTables[eachColumn.reference].pos;
 
                     const x1 = referredTablePos.x + 2 * initialOffset;
