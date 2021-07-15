@@ -38,7 +38,25 @@ const Table: FC<{ table: SQLTable; index: number }> = ({ table, index }) => {
             onContextMenu={e => {
                 e.preventDefault();
                 if (e.shiftKey) {
-                    setAllTables(prevAllTables => prevAllTables.filter(eachOldTable => eachOldTable.id !== table.id));
+                    setAllTables(prevAllTables => {
+                        const tableIndex = findIndex(prevAllTables, table);
+
+                        return prevAllTables
+                            .filter(eachOldTable => eachOldTable.id !== table.id)
+                            .map(eachOldTable => {
+                                return {
+                                    ...eachOldTable, // same old tables
+                                    columns: eachOldTable.columns.map(eachOldColumn => ({
+                                        ...eachOldColumn, // same old columns
+                                        // only updating reference and modifier
+                                        reference:
+                                            eachOldColumn.reference === tableIndex ? null : eachOldColumn.reference,
+                                        modifier: eachOldColumn.reference === tableIndex ? '' : eachOldColumn.modifier,
+                                    })),
+                                };
+                            });
+                    });
+
                     setSelectedTable(null);
                     setEditingTable(null);
                 }
