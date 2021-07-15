@@ -2,17 +2,22 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { SQLColumn, SQLKeyModifier, SQLTable, SQLType } from './constants';
 
+export const availableCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()_ ';
+
 export const makeColumn = (name: string, type?: SQLType, flag?: SQLKeyModifier): SQLColumn => {
     return { name, type: type || 'INT', modifier: flag || '', reference: null };
 };
 
-export const makeTable = (() => {
-    let id = 0;
+export const makeTable = (name: string, x: number, y: number): SQLTable => {
+    const id = Array(15)
+        .fill(null)
+        .map(() => {
+            return availableCharacters[Math.floor(Math.random() * availableCharacters.length)];
+        })
+        .join('');
 
-    return (name: string, x: number, y: number): SQLTable => {
-        return { name, pos: { x: x < 1 ? 1 : x, y: y < 1 ? 1 : y }, columns: [], id: id++ };
-    };
-})();
+    return { name, pos: { x: x < 1 ? 1 : x, y: y < 1 ? 1 : y }, columns: [], id };
+};
 
 export const setNewTable = (setAllTables: Dispatch<SetStateAction<SQLTable[]>>, newTable: SQLTable) => {
     setAllTables(prevAllTables => {
@@ -36,4 +41,10 @@ export const findIndex = (allTables: SQLTable[], table: SQLTable) => {
 
 export const convertRemToPixels = (rem: number) => {
     return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+};
+
+export const asyncSleep = (ms: number): Promise<void> => {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(), ms);
+    });
 };

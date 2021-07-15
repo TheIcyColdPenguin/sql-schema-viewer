@@ -17,7 +17,7 @@ export interface SQLColumn {
 export interface SQLTable {
     name: string;
     columns: SQLColumn[];
-    id: number;
+    id: string;
     pos: { x: number; y: number };
 }
 

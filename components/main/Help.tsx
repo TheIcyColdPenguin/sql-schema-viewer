@@ -12,13 +12,15 @@ export const HelpButton: FC = () => {
             className={styles.container}
         >
             <img src={'help.svg'} />
-            {helpDisplay && <div className={styles.popup}>
-                <ul>
-                    <li>New Table - Shift + Click</li>
-                    <li>Delete Table - Shift + Right click</li>
-                    <li>Edit Table - Double click</li>
-                </ul>
-                </div>}
+            {helpDisplay && (
+                <div className={styles.popup}>
+                    <ul>
+                        <li>New Table - Shift + Click</li>
+                        <li>Delete Table - Shift + Right click</li>
+                        <li>Edit Table - Double click</li>
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };

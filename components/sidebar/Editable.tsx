@@ -1,4 +1,5 @@
 import { FC, ChangeEvent, MouseEventHandler } from 'react';
+import { availableCharacters } from '../../others/helpers';
 
 import styles from '../../styles/sidebar.module.css';
 
@@ -27,7 +28,14 @@ export const OrdinaryEditable: FC<OrdinaryEditableProps> = ({ subtitle, inputs, 
                         key={i}
                         value={eachInput.value}
                         placeholder={eachInput.placeholder || 'Enter a value'}
-                        onInput={eachInput.onInput as (e: ChangeEvent<HTMLInputElement>) => void}
+                        onInput={(e: ChangeEvent<HTMLInputElement>) => {
+                            if (
+                                (e.nativeEvent as any).data === null ||
+                                availableCharacters.split('').includes((e.nativeEvent as any).data)
+                            ) {
+                                (eachInput.onInput as (e: ChangeEvent<HTMLInputElement>) => void)(e);
+                            }
+                        }}
                     />
                 ) : (
                     <select

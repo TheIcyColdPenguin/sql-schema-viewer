@@ -8,7 +8,9 @@ import { convertRemToPixels, makeColumn, makeTable, setNewTable } from '../../ot
 import Table from '../table/Table';
 
 import styles from '../../styles/main.module.css';
+
 import { HelpButton } from './Help';
+import { ShareButton } from './Share';
 
 const Main: FC = () => {
     const [allTables, setAllTables] = useContext(AllTablesContext);
@@ -67,7 +69,7 @@ const Main: FC = () => {
                     const y2 = eachTable.pos.y + initialOffset + (i + 1) * divSize;
 
                     canvasContext.moveTo(x1, y1);
-                    canvasContext.quadraticCurveTo(((x1 + x2) / 2) * 1.2, ((y1 + y2) / 2) * 0.99, x2, y2);
+                    canvasContext.quadraticCurveTo(((x1 + x2) / 2) * 1.05, ((y1 + y2) / 2) * 0.99, x2, y2);
                 }
             });
         });
@@ -110,6 +112,7 @@ const Main: FC = () => {
                 return <Table key={i} table={eachTable} index={i} />;
             })}
             <HelpButton />
+            <ShareButton />
         </div>
     );
 };
